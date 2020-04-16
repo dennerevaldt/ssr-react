@@ -1,17 +1,20 @@
 // src/server.js
 import express from 'express';
+import bodyParser from 'body-parser';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import App from '../app';
 import template from './template';
 
 const server = express();
+server.use(bodyParser.urlencoded({ extended: true }));
 
 server.use('/assets', express.static('assets'));
 
-server.get('/step/0', (req, res) => {
-  const step = 0;
-  const appString = renderToString(<App step={step} />);
+server.get('/step/:step', (req, res) => {
+  const { step } = req.params;
+  const current = parseInt(step);
+  const appString = renderToString(<App step={current} />);
 
   res.send(
     template({
@@ -21,28 +24,11 @@ server.get('/step/0', (req, res) => {
   );
 });
 
-server.get('/step/1', (req, res) => {
-  const step = 1;
-  const appString = renderToString(<App step={step} />);
+server.post('/step', (req, res) => {
+  const { step } = req.body;
+  const current = parseInt(step) + 1;
 
-  res.send(
-    template({
-      body: appString,
-      title: 'Steps',
-    })
-  );
-});
-
-server.get('/step/2', (req, res) => {
-  const step = 2;
-  const appString = renderToString(<App step={step} />);
-
-  res.send(
-    template({
-      body: appString,
-      title: 'Steps',
-    })
-  );
+  res.redirect(`/step/${current}`);
 });
 
 server.listen(3000, () => console.log('Running in PORT 3000'));

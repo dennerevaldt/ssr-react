@@ -5,8 +5,7 @@ import NotFound from './screens/NotFound';
 import Checkout from './screens/Checkout';
 
 const Router = ({ step }) => {
-  if (step > 1) return <NotFound />;
-
+  if (step > 2) return <NotFound />;
   return <Checkout step={step} />;
 };
 

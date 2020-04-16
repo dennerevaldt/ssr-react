@@ -11,9 +11,9 @@ server.use(bodyParser.urlencoded({ extended: true }));
 
 server.use('/assets', express.static('assets'));
 
-server.get('/step/:step', (req, res) => {
-  const { step } = req.params;
-  const current = parseInt(step);
+server.get('/step', (req, res) => {
+  const { step } = req.query;
+  const current = parseInt(step || 0);
   const appString = renderToString(<App step={current} />);
 
   res.send(
@@ -28,7 +28,7 @@ server.post('/step', (req, res) => {
   const { step } = req.body;
   const current = parseInt(step) + 1;
 
-  res.redirect(`/step/${current}`);
+  res.redirect(`/step?step=${current}`);
 });
 
 server.listen(3000, () => console.log('Running in PORT 3000'));
